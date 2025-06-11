@@ -1,0 +1,11 @@
+{
+    "id": "PayOS-plugin",
+    "name": "PayOS Payment Gateway",
+    "namespace": "PayOS\\",
+    "provider": "PayOS\\Providers\\VNPayServiceProvider",
+    "author": "Quang Hoa",
+    "url": "https://binjuhor.com",
+    "version": "0.1.0",
+    "description": "PayOS payment gateway integration",
+    "require": ["payment"]
+}
