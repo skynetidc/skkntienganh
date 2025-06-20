@@ -15,7 +15,6 @@
             </ul>
         </li>
     @endif
-
     <li>
         <a title="{{ __('Compare') }}" href="{{ route('public.compare') }}" class="btn-compare">
             <x-core::icon name="ti ti-refresh"/>
@@ -30,6 +29,7 @@
         <a title="{{ __('Cart') }}" href="{{ route('public.cart') }}" class="btn-cart">
             <x-core::icon name="ti ti-shopping-cart"/>
         </a>
+        <span class="badge bg-red text-red-fg badge-pill" style="background-color: rgba(var(--bb-red-rgb),var(--bb-bg-opacity))!important; color: var(--bb-red-fg)!important; border-radius:100rem; width:1.35714285em; height:1.35714285em">{{ number_format(Cart::instance('cart')->content()->count()) }}</span>
     </li>
     <li>
         @if (auth('customer')->check())

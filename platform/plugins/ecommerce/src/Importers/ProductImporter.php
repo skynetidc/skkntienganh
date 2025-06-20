@@ -246,7 +246,7 @@ class ProductImporter extends Importer implements WithMapping
                     'is_variation_default' => true,
                     'auto_generate_sku' => true,
                     'description' => Str::limit($product->description),
-                    'content' => Str::limit($product->content),
+                    'content' => Str::limit($product->description),
                     'categories' => $product->categories?->pluck('name')->join(','),
                     'product_collections' => $product->productCollections?->pluck('name')->join(','),
                     'labels' => $product->labels?->pluck('name')->join(','),

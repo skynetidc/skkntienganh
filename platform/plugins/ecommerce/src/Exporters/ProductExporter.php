@@ -207,7 +207,7 @@ class ProductExporter extends Exporter
                 'height' => $product->height,
                 'cost_per_item' => $product->cost_per_item,
                 'barcode' => $product->barcode,
-                'content' => $product->content,
+                'content' => $product->description,
                 'tags' => implode(',', $product->tags->pluck('name')->all()),
                 'generate_license_code' => $product->generate_license_code,
                 'minimum_order_quantity' => $product->minimum_order_quantity,

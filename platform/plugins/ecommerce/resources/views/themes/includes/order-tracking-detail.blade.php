@@ -68,6 +68,7 @@
                                     <th>{{ __('Product') }}</th>
                                     <th class="text-center">{{ __('Amount') }}</th>
                                     <th class="text-end" style="width: 100px">{{ __('Quantity') }}</th>
+                                    <th class="text-end" style="width: 100px">Tài Liệu</th>
                                     <th class="price text-end">{{ __('Total') }}</th>
                                 </tr>
                             </thead>
@@ -79,7 +80,7 @@
                                                 'ec_products.id' => $orderProduct->product_id,
                                             ],
                                             'take' => 1,
-                                            'select' => ['ec_products.id', 'ec_products.images', 'ec_products.name', 'ec_products.price', 'ec_products.sale_price', 'ec_products.sale_type', 'ec_products.start_date', 'ec_products.end_date', 'ec_products.sku', 'ec_products.is_variation', 'ec_products.status', 'ec_products.order', 'ec_products.created_at'],
+                                            'select' => ['ec_products.id', 'ec_products.images', 'ec_products.name', 'ec_products.content', 'ec_products.price', 'ec_products.sale_price', 'ec_products.sale_type', 'ec_products.start_date', 'ec_products.end_date', 'ec_products.sku', 'ec_products.is_variation', 'ec_products.status', 'ec_products.order', 'ec_products.created_at'],
                                         ]);
                                     @endphp
                                     <tr>
@@ -116,16 +117,13 @@
                                                     </small>
                                                 </p>
                                             @endif
-
                                             @include(
                                                 EcommerceHelper::viewPath('includes.cart-item-options-extras'),
                                                 ['options' => $orderProduct->options]
                                             )
-
                                             @if (!empty($orderProduct->product_options) && is_array($orderProduct->product_options))
                                                 {!! render_product_options_html($orderProduct->product_options, $orderProduct->price) !!}
                                             @endif
-
                                             @if (is_plugin_active('marketplace') && ($product = $orderProduct->product) && $product->original_product->store->id)
                                                 <p class="d-block mb-0 sold-by">
                                                     <small>{{ __('Sold by') }}: <a
@@ -137,6 +135,11 @@
                                         </td>
                                         <td class="text-center">{{ $orderProduct->amount_format }}</td>
                                         <td class="text-center">{{ $orderProduct->qty }}</td>
+                                        <td class="text-center">
+                                        @if ($order->payment->status == 'completed')
+                                            {{ BaseHelper::html($product->content) }}
+                                        @endif
+                                        </td>
                                         <td class="money text-end">
                                             <strong>
                                                 {{ $orderProduct->total_format }}

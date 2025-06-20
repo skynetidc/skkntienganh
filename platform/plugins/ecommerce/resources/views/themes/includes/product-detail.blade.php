@@ -13,14 +13,7 @@
                 @include(EcommerceHelper::viewPath('includes.product-price'))
 
                 {!! apply_filters('ecommerce_before_product_description', null, $product) !!}
-                <p
-                    class="product-description"
-                    id="detail-description"
-                >
-                    {!! $product->description !!}
-                </p>
                 {!! apply_filters('ecommerce_after_product_description', null, $product) !!}
-
                 <div class="text-warning"></div>
                 <form class="single-variation-wrap" data-bb-toggle="product-form" action="{{ route('public.cart.add-to-cart') }}" method="post">
                     @csrf

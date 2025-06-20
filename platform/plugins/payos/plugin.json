@@ -1,0 +1,11 @@
+{
+    "id": "PayOS-plugin",
+    "name": "PayOS Payment Gateway",
+    "namespace": "Binjuhor\\PayOs\\",
+    "provider": "Binjuhor\\PayOs\\Providers\\PayOsServiceProvider",
+    "author": "Quang Hoa",
+    "url": "https://skynetidc.com",
+    "version": "0.1.0",
+    "description": "PayOS payment gateway integration",
+    "require": ["payment"]
+}

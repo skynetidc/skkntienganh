@@ -48,14 +48,6 @@
 @endif
 
 <div
-    class="checkout-discount-section"
-    @if (session()->has('applied_coupon_code')) style="display: none;" @endif
->
-    <a class="btn-open-coupon-form" href="#">
-        {{ __('You have a coupon code?') }}
-    </a>
-</div>
-<div
     class="coupon-wrapper mt-2"
     @if (!session()->has('applied_coupon_code')) style="display: none;" @endif
 >

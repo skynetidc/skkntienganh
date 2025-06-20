@@ -26,10 +26,11 @@
                 id="tab_description"
                 role="tabpanel"
             >
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="ck-content">
-                            {!! BaseHelper::clean($product->content) !!}
+                            {!! BaseHelper::clean($product->description) !!}
                         </div>
                     </div>
                 </div>

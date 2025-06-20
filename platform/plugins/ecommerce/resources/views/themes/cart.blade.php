@@ -97,18 +97,18 @@
                             </table>
                         </div>
                     </x-core::form>
-                    <div class="cart-bottom mt-4 mb-4">
-                        <div class="cart-coupon row">
-                            <div class="col-lg-6">
-                                <x-core::form :url="route('public.coupon.apply')" method="post" data-bb-toggle="coupon-form" id="coupon-form">
-                                    <div class="input-group mb-3 w-auto">
-                                        <input type="text" class="form-control" name="coupon_code" placeholder="{{ __('Enter Coupon Code') }}" value="{{ BaseHelper::stringify(old('coupon_code', session('applied_coupon_code'))) }}">
-                                        <button data-bb-toggle="coupon-form-btn" class="btn btn-primary" type="submit" @disabled(session('applied_coupon_code'))>{{ __('Apply') }}</button>
-                                    </div>
-                                </x-core::form>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="cart-bottom mt-4 mb-4">-->
+<!--                        <div class="cart-coupon row">-->
+<!--                            <div class="col-lg-6">-->
+<!--                                <x-core::form :url="route('public.coupon.apply')" method="post" data-bb-toggle="coupon-form" id="coupon-form">-->
+<!--                                    <div class="input-group mb-3 w-auto">-->
+<!--                                        <input type="text" class="form-control" name="coupon_code" placeholder="{{ __('Enter Coupon Code') }}" value="{{ BaseHelper::stringify(old('coupon_code', session('applied_coupon_code'))) }}">-->
+<!--                                        <button data-bb-toggle="coupon-form-btn" class="btn btn-primary" type="submit" @disabled(session('applied_coupon_code'))>{{ __('Apply') }}</button>-->
+<!--                                    </div>-->
+<!--                                </x-core::form>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="card p-4">
