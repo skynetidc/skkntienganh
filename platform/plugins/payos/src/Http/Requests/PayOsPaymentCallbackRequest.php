@@ -1,8 +1,8 @@
 <?php
 
-namespace PayOs\Http\Requests;
+namespace Binjuhor\PayOs\Http\Requests;
 
-use Support\Http\Requests\Request;
+use Botble\Support\Http\Requests\Request;
 
 class PayOsPaymentCallbackRequest extends Request
 {

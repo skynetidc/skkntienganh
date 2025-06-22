@@ -119,20 +119,25 @@ class HookServiceProvider extends ServiceProvider
             $paymentData['callback_url'] = route('payments.payos.callback');
 
             $YOUR_DOMAIN = $request->getSchemeAndHttpHost();
-            $data = [
-                "orderCode" => intval(substr(strval(microtime(true) * 10000), -6)),
-                "amount" => $paymentData['amount'],
-                "description" => "Thanh toán đơn hàng",
-                "returnUrl" => $YOUR_DOMAIN . "/payment/payos/callback",
-                "cancelUrl" => $YOUR_DOMAIN . "/cart"
-            ];
-            $response = $payOSService->makePayment($data);
+//            $data = [
+//                "orderCode" => intval(substr(strval(microtime(true) * 10000), -6)),
+//                "amount" => $paymentData['amount'],
+//                "description" => "Thanh toán đơn hàng",
+//                "returnUrl" => $YOUR_DOMAIN . "/payment/payos/callback",
+//                "cancelUrl" => $YOUR_DOMAIN . "/payment/payos/callback"
+//            ];
+            $paymentData['orderCode'] = intval(substr(strval(microtime(true) * 10000), -6));
+            $paymentData['description'] = "Thanh toán đơn hàng";
+            $paymentData['returnUrl'] = $YOUR_DOMAIN . "/payment/payos/callback";
+            $paymentData['cancelUrl'] = $YOUR_DOMAIN . "/payment/payos/callback";
+
+            $response = $payOSService->makePayment($paymentData);
 
             if ($response) {
-//                $data['checkoutUrl'] = $response;
                 $data['checkoutUrl'] = $response;
                 $data['error'] = false;
-                $data['message'] = __(json_encode($data));
+                $data['message'] = '';
+//                $data['message'] = $paymentData['checkout_token'];
             } else {
                 $data['error'] = true;
                 $data['message'] = __('Something went wrong. Please try again later.');

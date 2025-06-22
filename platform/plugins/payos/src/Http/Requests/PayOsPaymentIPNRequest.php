@@ -1,6 +1,6 @@
 <?php
 
-namespace PayOs\Http\Requests;
+namespace Binjuhor\PayOs\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

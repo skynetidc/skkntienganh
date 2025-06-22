@@ -1,6 +1,6 @@
 <?php
 
-use PayOs\Http\Controllers\PayOSController;
+use Binjuhor\PayOs\Http\Controllers\PayOSController;
 
 Route::group(['controller' => PayOSController::class, 'middleware' => ['web', 'core']], function () {
     Route::get('payment/payos/callback', 'getCallback')->name('payments.payos.callback');

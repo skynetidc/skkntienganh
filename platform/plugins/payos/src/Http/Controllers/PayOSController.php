@@ -1,11 +1,12 @@
 <?php
 
-namespace PayOs\Http\Controllers;
+namespace Binjuhor\PayOs\Http\Controllers;
 
-use PayOs\Http\Requests\PayOsPaymentIPNRequest;
+use Binjuhor\PayOs\Http\Requests\PayOsPaymentIPNRequest;
 use Botble\Base\Http\Responses\BaseHttpResponse;
-use PayOs\Http\Requests\PayOsPaymentCallbackRequest;
+use Binjuhor\PayOs\Http\Requests\PayOsPaymentCallbackRequest;
 use Botble\Payment\Supports\PaymentHelper;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Binjuhor\PayOs\Services\Gateways\PayOsPaymentService;
 
@@ -20,31 +21,38 @@ class PayOSController extends Controller
      * @return void
      */
     public function getCallback(
-        PayOsPaymentCallbackRequest $request,
+        Request $request,
         PayOsPaymentService         $payOsPaymentService,
         BaseHttpResponse            $response
     ) {
         $status = $payOsPaymentService->getPaymentStatus($request);
-        $token = null;
+        $code = $request->query('code');
+        $id = $request->query('id');
+        $orderCode = $request->query('orderCode');
+        $cancel = $request->query('cancel');
 
-        if (! $status) {
+        if ($status == 'CANCELLED') {
             return $response
                 ->setError()
                 ->setNextUrl(PaymentHelper::getCancelURL())
                 ->withInput()
-                ->setMessage(__('Payment failed!'));
+                ->setMessage('Cancel payment!');
         }
 
-        if(setting('payment_payos_mode') == 0) {
-            $payOsPaymentService->afterMakePayment($request->input());
-        }
+        $inputData = array(
+            "id" => $id,
+            "code" => $code,
+            "status" => $status,
+            "cancel" => $cancel,
+            "orderCode" => $orderCode
+        );
 
         if(setting('payment_payos_mode') == 1) {
-            $token = $payOsPaymentService->getToken($request->input());
+            $payOsPaymentService->afterMakePayment($inputData);
         }
 
         return $response
-            ->setNextUrl(PaymentHelper::getRedirectURL($token))
+            ->setNextUrl(PaymentHelper::getRedirectURL($id))
             ->setMessage(__('Checkout successfully!'));
     }
 
@@ -59,9 +67,9 @@ class PayOSController extends Controller
         PayOsPaymentIPNRequest $request,
         PayOsPaymentService $payOsPaymentService
     ) {
-//        if($request->has('vnp_SecureHash')) {
-//            return response()->json($payOsPaymentService->storeData($request->input()));
-//        }
+        if($request->has('vnp_SecureHash')) {
+            return response()->json($payOsPaymentService->storedData($request->input()));
+        }
 
         return response()->json([
             'RspCode' => '99',

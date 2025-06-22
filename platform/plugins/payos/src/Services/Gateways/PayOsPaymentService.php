@@ -30,7 +30,6 @@ class PayOsPaymentService
 
     public function makePayment(array $data)
     {
-        error_log($data['orderCode']);
         try {
             $response = $this->payOS->createPaymentLink($data);
             return $response['checkoutUrl'];
@@ -39,8 +38,26 @@ class PayOsPaymentService
         }
     }
 
-    public function afterMakePayment(Request $request)
+    public function afterMakePayment(array $data)
     {
+        $chargeId = $data['id'];
+        $order = Order::find($data['orderCode']);
+
+        if($order !== NULL) {
+            $customer = $order->user;
+            $status = $data['status'] === 'PAID' ? PaymentStatusEnum::COMPLETED : PaymentStatusEnum::PENDING;
+            do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
+                'currency' => 'VND',
+                'charge_id' => $chargeId,
+                'order_id' => $order->id,
+                'customer_id' => $customer->id,
+                'customer_type' => get_class($customer),
+                'payment_channel' => VNPAY_PAYMENT_METHOD_NAME,
+                'status' => $status,
+            ]);
+        }
+
+        return $chargeId;
     }
 
     public function execPostRequest($url, $data): bool|string
@@ -74,7 +91,7 @@ class PayOsPaymentService
                 'order_id' => $order->id,
                 'customer_id' => $customer->id,
                 'customer_type' => get_class($customer),
-                'payment_channel' => MOMO_PAYMENT_METHOD_NAME,
+                'payment_channel' => 'PAYMENT WITH PayOs',
                 'status' => $data['resultCode'] == '0' ? PaymentStatusEnum::COMPLETED : PaymentStatusEnum::PENDING,
             ]);
         }
@@ -82,39 +99,7 @@ class PayOsPaymentService
 
     public function getPaymentStatus($request): string
     {
-        $accessKey = $this->accessKey;
-        $secretKey = $this->secretKey;
-        $partnerCode = $request->partnerCode;
-        $orderId = $request->orderId;
-        $requestId = $request->requestId;
-        $amount = $request->amount;
-        $orderInfo = $request->orderInfo;
-        $orderType = $request->orderType;
-        $transId = $request->transId;
-        $resultCode = $request->resultCode;
-        $message = $request->message;
-        $payType = $request->payType;
-        $responseTime = $request->responseTime;
-        $extraData = $request->extraData;
-        $m2signature = $request->signature; //MoMo signate
-
-        $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&message=" . $message . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo .
-            "&orderType=" . $orderType . "&partnerCode=" . $partnerCode . "&payType=" . $payType . "&requestId=" . $requestId . "&responseTime=" . $responseTime .
-            "&resultCode=" . $resultCode . "&transId=" . $transId;
-
-        $partnerSignature = hash_hmac("sha256", $rawHash, $secretKey);
-
-        if ($m2signature == $partnerSignature) {
-            if ($resultCode == '0') {
-                $result = 'success';
-            } else {
-                $result = 'error';
-            }
-        } else {
-            $result = 'hacked';
-        }
-
-        return $result;
+        return $request->query('status');
     }
 
     public function supportedCurrencyCodes(): array

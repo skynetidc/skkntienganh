@@ -67,7 +67,7 @@
                         </div>
                         <div class="form-group mb-3">
                             <label class="text-title-field" for="payment_payos_description">{{ trans('core/base::forms.description') }}</label>
-                            <textarea class="next-input" name="payment_payos_description" id="payment_payos_description">{{ get_payment_setting('description', 'payos', __('You will be redirected to payos to complete the payment.')) }}</textarea>
+                            <textarea class="next-input" name="payment_payos_description" id="payment_payos_description">{{ get_payment_setting('description', 'payos', __('Bạn sẽ được chuyển hướng đến payos để hoàn tất thanh toán.')) }}</textarea>
                         </div>
                         <p class="payment-note">
                             {{ trans('plugins/payment::payment.please_provide_information') }} <a target="_blank" href="https://payos.vn">payos</a>:
