@@ -55,47 +55,18 @@
                             {{ __('Add To Cart') }}
                         </button>
                     </div>
-
-                    @if(EcommerceHelper::isWishlistEnabled() || EcommerceHelper::isCompareEnabled())
-                        <div class="d-flex gap-4 mb-3">
-                            @if (EcommerceHelper::isCompareEnabled())
-                                <button
-                                    @class(['btn bb-btn-compare bb-btn-product-actions-icon', 'active' => EcommerceHelper::isProductInCompare($product->original_product->id)])
-                                    style="border: 0 !important;"
-                                    data-bb-toggle="add-to-compare" title="Add to compare"
-                                    data-url="{{ route('public.compare.add', $product) }}"
-                                    data-remove-url="{{ route('public.compare.remove', $product) }}"
-                                >
-                                    <x-core::icon name="ti ti-refresh"/>
-                                    {{ __('Compare') }}
-                                </button>
-                            @endif
-                            @if (EcommerceHelper::isWishlistEnabled())
-                                <button
-                                    class="btn bb-btn-wishlist bb-btn-product-actions-icon"
-                                    data-bb-toggle="add-to-wishlist" title="Add to wishlist"
-                                    data-url="{{ route('public.wishlist.add', $product) }}"
-                                >
-                                    <x-core::icon name="ti ti-heart"/>
-                                    {{ __('Add Wishlist') }}
-                                </button>
-                            @endif
+                    <div class="d-flex gap-4 mb-3">
+                        <div class="cart-checkout-proceed mt-3">
+                            <a href="{{ route('public.checkout.information', OrderHelper::getOrderSessionToken()) }}" data-bb-toggle="cart-checkout" class="cart-checkout-btn w-100 btn btn-primary">
+                                {{ __('Proceed to Checkout') }}
+                            </a>
                         </div>
-                    @endif
+                    </div>
                 </form>
                 <div class="bb-product-meta">
-                    @if ($product->sku)
-                        <span>{{ __('SKU') }} : <span
-                                class="sku"
-                                id="product-sku"
-                                itemprop="sku"
-                            >{{ $product->sku }}</span></span>
-                    @endif
                     <span>
-                    <span
-                        id="is-out-of-stock">{{ !$product->isOutOfStock() ? __('In stock') : __('Out of stock') }}</span>
-                </span>
-
+                        <span id="is-out-of-stock">{{ !$product->isOutOfStock() ? __('In stock') : __('Out of stock') }}</span>
+                    </span>
                     @if (!$product->categories->isEmpty())
                         <span>{{ __('Categories') }} :
                         @foreach ($product->categories as $category)

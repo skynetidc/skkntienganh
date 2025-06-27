@@ -2849,7 +2849,11 @@ input, textarea {
 
 @media (max-width: 991.98px) {
     .slider__single {
-        min-height: 500px
+        min-height: 400px
+    }
+
+    .slider__area {
+        max-height: 400px !important;
     }
 }
 
@@ -2878,7 +2882,7 @@ input, textarea {
 .slider__bg {
     background-position: 50%;
     background-size: cover;
-    height: 100%;
+    height: 70%;
     left: 0;
     mix-blend-mode: luminosity;
     opacity: .7;
@@ -14326,11 +14330,12 @@ blockquote p {
         top: 0 !important;
         width: 100% !important;
         z-index: 1 !important;
+        height: 70% !important;
     }
 
-    /*.swiper-container {*/
-    /*    height: 40% !important;*/
-    /*}*/
+    .swiper-container {
+        height: 40% !important;
+    }
 
     .slider_baner_home8 .slider__bg, .slider_baner_home8 .slider__single {
         min-height: 558px

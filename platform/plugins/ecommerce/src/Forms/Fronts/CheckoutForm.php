@@ -161,7 +161,7 @@ class CheckoutForm extends FormAbstract
                                         $form
                                             ->addWrapper(
                                                 'shipping_method_wrapper',
-                                                '<div class="shipping-method-wrapper mb-4">',
+                                                '<div class="shipping-method-wrapper mb-4" style="display: none">',
                                                 '</div>',
                                                 function (CheckoutForm $form) use ($model) {
                                                     $form

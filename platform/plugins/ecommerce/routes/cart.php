@@ -14,6 +14,7 @@ Theme::registerRoutes(function () {
         ->group(function () {
             Route::get('/', 'index')->name('cart');
             Route::post('add-to-cart', 'store')->name('cart.add-to-cart');
+            Route::post('add-to-cart-checkout', 'cartCheckout')->name('cart.add-to-cart');
             Route::post('update', 'update')->name('cart.update');
             Route::get('remove/{id}', 'destroy')->name('cart.remove');
             Route::get('destroy', 'empty')->name('cart.destroy');

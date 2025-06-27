@@ -213,6 +213,155 @@ class PublicCartController extends BaseController
             ]);
     }
 
+    public function cartCheckout(CartRequest $request)
+    {
+        $response = $this->httpResponse();
+
+        $product = Product::query()->find($request->input('id'));
+
+        if (! $product) {
+            return $response
+                ->setError()
+                ->setMessage(__('This product is out of stock or not exists!'));
+        }
+
+        if ($product->variations->count() > 0 && ! $product->is_variation) {
+            $product = $product->defaultVariation->product;
+        }
+
+        $originalProduct = $product->original_product;
+
+        if ($product->isOutOfStock()) {
+            return $response
+                ->setError()
+                ->setMessage(
+                    __(
+                        'Product :product is out of stock!',
+                        ['product' => $originalProduct->name ?: $product->name]
+                    )
+                );
+        }
+
+        $maxQuantity = $product->quantity;
+
+        if (! $product->canAddToCart($request->input('qty', 1))) {
+            return $response
+                ->setError()
+                ->setMessage(__('Maximum quantity is :max!', ['max' => $maxQuantity]));
+        }
+
+        $product->quantity -= $request->input('qty', 1);
+
+        $outOfQuantity = false;
+        foreach (Cart::instance('cart')->content() as $item) {
+            if ($item->id == $product->id) {
+                $originalQuantity = $product->quantity;
+                $product->quantity = (int) $product->quantity - $item->qty;
+
+                if ($product->quantity < 0) {
+                    $product->quantity = 0;
+                }
+
+                if ($product->isOutOfStock()) {
+                    $outOfQuantity = true;
+
+                    break;
+                }
+
+                $product->quantity = $originalQuantity;
+            }
+        }
+
+        if (
+            EcommerceHelper::isEnabledProductOptions() &&
+            $originalProduct->options()->where('required', true)->exists()
+        ) {
+            if (! $request->input('options')) {
+                return $response
+                    ->setError()
+                    ->setData(['next_url' => $originalProduct->url])
+                    ->setMessage(__('Please select product options!'));
+            }
+
+            $requiredOptions = $originalProduct->options()->where('required', true)->get();
+
+            $message = null;
+
+            foreach ($requiredOptions as $requiredOption) {
+                if (! $request->input('options.' . $requiredOption->id . '.values')) {
+                    $message .= trans(
+                        'plugins/ecommerce::product-option.add_to_cart_value_required',
+                        ['value' => $requiredOption->name]
+                    );
+                }
+            }
+
+            if ($message) {
+                return $response
+                    ->setError()
+                    ->setMessage(__('Please select product options!'));
+            }
+        }
+
+        if ($outOfQuantity) {
+            return $response
+                ->setError()
+                ->setMessage(__(
+                    'Product :product is out of stock!',
+                    ['product' => $originalProduct->name ?: $product->name]
+                ));
+        }
+
+        $cartItems = OrderHelper::handleAddCart($product, $request);
+
+        $cartItem = Arr::first(array_filter($cartItems, fn ($item) => $item['id'] == $product->id));
+
+        $response->setMessage(__(
+            'Added product :product to cart successfully!',
+            ['product' => $originalProduct->name ?: $product->name]
+        ));
+
+        $responseData = [
+            'status' => true,
+            'content' => $cartItems,
+        ];
+
+        app(GoogleTagManager::class)->addToCart(
+            $originalProduct,
+            $cartItem['qty'],
+            $cartItem['subtotal'],
+        );
+
+        app(FacebookPixel::class)->addToCart(
+            $originalProduct,
+            $cartItem['qty'],
+            $cartItem['subtotal'],
+        );
+
+        $token = OrderHelper::getOrderSessionToken();
+        $nextUrl = route('public.checkout.information', $token);
+
+        if (EcommerceHelper::getQuickBuyButtonTarget() == 'cart') {
+            $nextUrl = route('public.cart');
+        }
+
+        if ($request->input('checkout')) {
+            Cart::instance('cart')->refresh();
+
+            $responseData['next_url'] = $nextUrl;
+
+            if ($request->ajax() && $request->wantsJson()) {
+                return $response->setData($responseData);
+            }
+
+            return $response
+                ->setData($responseData)
+                ->setNextUrl($nextUrl);
+        }
+
+        return redirect()->to(route('public.checkout.information', OrderHelper::getOrderSessionToken()));
+    }
+
     public function update(UpdateCartRequest $request)
     {
         if ($request->has('checkout')) {

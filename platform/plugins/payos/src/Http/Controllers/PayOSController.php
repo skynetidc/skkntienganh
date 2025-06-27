@@ -63,6 +63,47 @@ class PayOSController extends Controller
      * @param PayOsPaymentService $payOsPaymentService
      * @return void
      */
+    public function return(
+        Request $request,
+        PayOsPaymentService         $payOsPaymentService,
+        BaseHttpResponse            $response
+    ) {
+        $status = $payOsPaymentService->getPaymentStatus($request);
+        $code = $request->query('code');
+        $id = $request->query('id');
+        $orderCode = $request->query('orderCode');
+        $cancel = $request->query('cancel');
+
+        if ($status == 'CANCELLED') {
+            return $response
+                ->setError()
+                ->setNextUrl(PaymentHelper::getCancelURL())
+                ->withInput()
+                ->setMessage('Cancel payment!');
+        }
+
+        $inputData = array(
+            "id" => $id,
+            "code" => $code,
+            "status" => $status,
+            "cancel" => $cancel,
+            "orderCode" => $orderCode
+        );
+
+        $payOsPaymentService->afterMakePayment($inputData);
+
+        return $response
+            ->setNextUrl(PaymentHelper::getRedirectURL($id))
+            ->setMessage(__('Checkout successfully!'));
+    }
+
+    /**
+     * Get IPN from PayOs
+     *
+     * @param PayOsPaymentIPNRequest $request
+     * @param PayOsPaymentService $payOsPaymentService
+     * @return void
+     */
     public function getIPN(
         PayOsPaymentIPNRequest $request,
         PayOsPaymentService $payOsPaymentService

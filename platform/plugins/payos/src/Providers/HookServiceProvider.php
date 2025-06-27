@@ -127,10 +127,10 @@ class HookServiceProvider extends ServiceProvider
 //                "cancelUrl" => $YOUR_DOMAIN . "/payment/payos/callback"
 //            ];
             $paymentData['orderCode'] = intval(substr(strval(microtime(true) * 10000), -6));
+//            $paymentData['orderCode'] = intval($paymentData['checkout_token']);
             $paymentData['description'] = "Thanh toán đơn hàng";
             $paymentData['returnUrl'] = $YOUR_DOMAIN . "/payment/payos/callback";
-            $paymentData['cancelUrl'] = $YOUR_DOMAIN . "/payment/payos/callback";
-
+            $paymentData['cancelUrl'] = $YOUR_DOMAIN . "/payment/payos/return";
             $response = $payOSService->makePayment($paymentData);
 
             if ($response) {
