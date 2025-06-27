@@ -2,6 +2,7 @@
 
 namespace Binjuhor\PayOs\Providers;
 
+use Botble\Ecommerce\Facades\OrderHelper;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Collective\Html\HtmlFacade as Html;
 use Illuminate\Http\Request;
@@ -130,7 +131,7 @@ class HookServiceProvider extends ServiceProvider
 //            $paymentData['orderCode'] = intval($paymentData['checkout_token']);
             $paymentData['description'] = "Thanh toán đơn hàng";
             $paymentData['returnUrl'] = $YOUR_DOMAIN . "/payment/payos/callback";
-            $paymentData['cancelUrl'] = $YOUR_DOMAIN . "/payment/payos/return";
+            $paymentData['cancelUrl'] = $YOUR_DOMAIN . "/checkout/".OrderHelper::getOrderSessionToken();
             $response = $payOSService->makePayment($paymentData);
 
             if ($response) {
