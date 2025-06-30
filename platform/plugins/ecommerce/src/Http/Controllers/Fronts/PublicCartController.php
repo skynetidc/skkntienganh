@@ -345,21 +345,17 @@ class PublicCartController extends BaseController
             $nextUrl = route('public.cart');
         }
 
-        if ($request->input('checkout')) {
-            Cart::instance('cart')->refresh();
+        Cart::instance('cart')->refresh();
 
-            $responseData['next_url'] = $nextUrl;
+        $responseData['next_url'] = $nextUrl;
 
-            if ($request->ajax() && $request->wantsJson()) {
-                return $response->setData($responseData);
-            }
-
-            return $response
-                ->setData($responseData)
-                ->setNextUrl($nextUrl);
+        if ($request->ajax() && $request->wantsJson()) {
+            return $response->setData($responseData);
         }
 
-        return redirect()->to(route('public.checkout.information', OrderHelper::getOrderSessionToken()));
+        return $response
+            ->setData($responseData)
+            ->setNextUrl($nextUrl);
     }
 
     public function update(UpdateCartRequest $request)

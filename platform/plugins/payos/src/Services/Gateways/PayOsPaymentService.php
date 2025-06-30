@@ -4,7 +4,6 @@ namespace Binjuhor\PayOs\Services\Gateways;
 
 use Botble\Ecommerce\Models\Order;
 use Botble\Payment\Enums\PaymentStatusEnum;
-use Illuminate\Http\Request;
 use PayOS\PayOS;
 
 class PayOsPaymentService

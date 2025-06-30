@@ -1,0 +1,61 @@
+<section class="services-area services-bg shortcode-services shortcode-services-style-1" style="--background-color: transparent; --background-image: url(https://skkntienganh.com/storage/backgrounds/services-bg.jpg); --title-color: #14176C;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8">
+                <div class="section-title text-center mb-40 tg-heading-subheading animation-style3">
+                    <h2 class="title tg-element-title" style="perspective: 400px;">
+                        SKKN Tiểu Học
+
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="services-item-wrap">
+            <div class="row justify-content-center" id="skkn-tieuhoc">
+                <!-- start section service-->
+
+                <!-- End section service-->
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    const sections = [
+        {"id": 13,"section":"skkn-tieuhoc"},{"id": 14,"section":"skkn-thcs"},{"id": 15,"section":"skkn-thpt"},{"id": 16,"section":"skkn-gvcn"}
+    ];
+    sections.forEach(skkn => {
+        fetch(`/api/v1/ecommerce/categories-products/${skkn.id}`, {method: "GET",redirect: "follow"})
+            .then((response) => response.text())
+            .then((result) => {
+                const products = JSON.parse(result).data.sort((a, b) => b.id - a.id);
+                console.log(products);
+                let productDetailSection = '';
+                let count = 0;
+                products.forEach((product) => {
+                    if (count < 4) {
+                        let productImage = product.image_url;
+                        let productUrl = `https://skkntienganh.com/products/${product.slug}`;
+                        let productName = product.name;
+                        let productDescription = product.description;
+                        let productDetail = `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
+                            <div class="services-item shine-animate-item">
+                                <div class="services-thumb">
+                                    <a href="${productUrl}" class="shine-animate">
+                                        <img src="${productImage}" data-bb-lazy="true" loading="lazy" alt="${productName}">
+                                    </a>
+                                </div>
+                                <div class="services-content">
+                                    <h4 class="title">${productName}</h4>
+                                    <p class="truncate-2-custom">${productDescription}</p>
+                                    <a href="${productUrl}" class="btn">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>`;
+                        productDetailSection += productDetail;
+                    }
+                    count++;
+                });
+                document.getElementById(skkn.section).innerHTML = productDetailSection;
+            }).catch((error) => console.error(error));
+    });
+</script>

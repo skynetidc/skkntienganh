@@ -69,6 +69,7 @@
                                     <th class="text-center">{{ __('Amount') }}</th>
                                     <th class="text-end" style="width: 100px">{{ __('Quantity') }}</th>
                                     <th class="text-end" style="width: 100px">Tài Liệu</th>
+                                    <th class="text-end" style="width: 100px">Tài Liệu</th>
                                     <th class="price text-end">{{ __('Total') }}</th>
                                 </tr>
                             </thead>

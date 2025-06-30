@@ -26,9 +26,9 @@
 
 {!! Theme::partial('header') !!}
 
-<main class="fix">
-    @yield('content')
-</main>
+<!--<main class="fix">-->
+<!--    @yield('content')-->
+<!--</main>-->
 
 <script>
     'use strict';
