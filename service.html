@@ -22,22 +22,25 @@
     const sections = [
         {"id": 13,"section":"skkn-tieuhoc"},{"id": 14,"section":"skkn-thcs"},{"id": 15,"section":"skkn-thpt"},{"id": 16,"section":"skkn-gvcn"}
     ];
-    sections.forEach(skkn => {
-        fetch(`/api/v1/ecommerce/categories-products/${skkn.id}`, {method: "GET",redirect: "follow"})
-            .then((response) => response.text())
-            .then((result) => {
-                const products = JSON.parse(result).data.sort((a, b) => b.id - a.id);
-                console.log(products);
-                let productDetailSection = '';
-                let count = 0;
-                const offsetSubstring = 25;
-                products.forEach((product) => {
-                    if (count < 4) {
-                        let productImage = product.image_url;
-                        let productUrl = `https://skkntienganh.com/products/${product.slug}`;
-                        let productName = product.name;
-                        let productDescription = product.description.length > offsetSubstring ? `${product.description.substring(0, offsetSubstring)}...` : product.description;
-                        let productDetail = `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
+
+    const homepages = [ '/', 'index.html', 'index.htm', 'index.php', 'main.html', 'main.htm', 'homepage.html', 'index2.htm' ];
+    if (homepages.indexOf(window.location.pathname) >= 0) {
+        sections.forEach(skkn => {
+            fetch(`/api/v1/ecommerce/categories-products/${skkn.id}`, {method: "GET",redirect: "follow"})
+                .then((response) => response.text())
+                .then((result) => {
+                    const products = JSON.parse(result).data.sort((a, b) => b.id - a.id);
+                    console.log(products);
+                    let productDetailSection = '';
+                    let count = 0;
+                    const offsetSubstring = 25;
+                    products.forEach((product) => {
+                        if (count < 4) {
+                            let productImage = product.image_url;
+                            let productUrl = `https://skkntienganh.com/products/${product.slug}`;
+                            let productName = product.name;
+                            let productDescription = product.description.length > offsetSubstring ? `${product.description.substring(0, offsetSubstring)}...` : product.description;
+                            let productDetail = `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
                             <div class="services-item shine-animate-item">
                                 <div class="services-thumb">
                                     <a href="${productUrl}" class="shine-animate">
@@ -51,11 +54,12 @@
                                 </div>
                             </div>
                         </div>`;
-                        productDetailSection += productDetail;
-                    }
-                    count++;
-                });
-                document.getElementById(skkn.section).innerHTML = productDetailSection;
-            }).catch((error) => console.error(error));
-    });
+                            productDetailSection += productDetail;
+                        }
+                        count++;
+                    });
+                    document.getElementById(skkn.section).innerHTML = productDetailSection;
+                }).catch((error) => console.error(error));
+        });
+    }
 </script>
