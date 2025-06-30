@@ -30,12 +30,13 @@
                 console.log(products);
                 let productDetailSection = '';
                 let count = 0;
+                const offsetSubstring = 25;
                 products.forEach((product) => {
                     if (count < 4) {
                         let productImage = product.image_url;
                         let productUrl = `https://skkntienganh.com/products/${product.slug}`;
                         let productName = product.name;
-                        let productDescription = product.description;
+                        let productDescription = product.description.length > offsetSubstring ? `${product.description.substring(0, offsetSubstring)}...` : product.description;
                         let productDetail = `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
                             <div class="services-item shine-animate-item">
                                 <div class="services-thumb">
